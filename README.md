@@ -22,22 +22,14 @@ Docker — Containerisation Platform that allows us to host multiple interconnec
 ## How It Works
 The threat actor would have to act as a router to effectively become the Man-in-The-Middle so that packets that are from the victim(h1) meant for server(h2) goes through him first before reaching the desired destination.
 
-The attack flow — ARP poisoning → traffic redirection → credential capture
-
 ### ARP Poisoning
-The ARP table before any malicious activity would point to the correct MAC address that is associated with that IP address. What ARP Poisoning does is the threat actor would give a false ARP reply to its desired target to basically 'Poison' that device's ARP table by claiming to be the MAC address associated with the legitimate IP address. This successfully makes the device think that it is sending packets to the right host, although it would be far from the truth.
+The ARP table before any malicious activity would point to the correct MAC address associated with that IP address. What ARP Poisoning does is the threat actor gives a false ARP reply to its desired target, claiming to be the MAC address associated with the legitimate IP address. This successfully makes the device think that it is sending packets to the right host, although it would be far from the truth.
 
 ### Traffic Redirection
-Just poisoning one side's ARP table would actually sound off alarms in the network, since the receiving end would notice that they didn't receive the promised packet. So, to overcome this issue, the threat actor would redirect traffic as if the packet didn't even pass through him, making an illusion of direct communication. 
-
-Traffic redirection is done by the threat actor poisoning the ARP tables of both sides (the victim and server), effectively making the victim think he is sending the packet directly to the server and the server think it is sending the packet directly to the victim.
-
-When the packet arrives at the attacker machine, it is automatically rerouted to its actual destination; avoiding any suspicious behavior
+The threat actor poisons the ARP tables of **both** sides (victim and server), making the victim think it is sending directly to the server and vice versa. When the packet arrives at the attacker machine, IP forwarding automatically reroutes it to its actual destination — maintaining the illusion of direct communication.
 
 ### Credential Capture
-Credential Capture would occur in that slight moment that the packet stays in the attackers grasp before redirecting it to its actual destination. During that time the packet sniffer script is what will actually decode the packet, so that valuable information can actually be extracted.
-
-In this particular instance, the packet sniffer script would look for the HTTP POST method and strings that contain user= or pass= (this would be specific tailored to the server being targeted)
+Credential capture occurs in the brief moment the packet passes through the attacker before being forwarded. The packet sniffer script decodes the packet to extract valuable information. In this instance, it looks for the HTTP POST method and strings containing `user=` or `pass=` — tailored specifically to the target server.
 
 ## Key Results
 ### Attacker MAC Address
@@ -53,6 +45,7 @@ In this particular instance, the packet sniffer script would look for the HTTP P
 ![captured](screenshots/intercepted-login-details.png)
 
 ## Defensive Countermeasures
-DAI, HTTPS/TLS — what would have stopped this
+DAI, HTTPS/TLS 
 
 ## References / What I Learned
+Creating and Capturing Packets using Python scripts
