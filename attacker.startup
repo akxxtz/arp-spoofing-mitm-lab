@@ -14,4 +14,7 @@ echo "nameserver 8.8.8.8" > /etc/resolv.conf
 apt-get update
 apt-get install -y python3-scapy python3-pip
 
+echo 0 > /proc/sys/net/ipv4/conf/eth0/send_redirects
+echo 0 > /proc/sys/net/ipv4/conf/all/send_redirects
+
 echo "Attacker device is fully initialized. IP, Forwarding, and Python tools ready."
