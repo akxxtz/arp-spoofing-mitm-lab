@@ -1,0 +1,5 @@
+#!/bin/bash
+# h1.startup - conf victim IP
+
+ifconfig eth0 10.0.0.10/24 up
+echo "Victim H1 configured."

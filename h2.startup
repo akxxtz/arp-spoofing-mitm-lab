@@ -1,0 +1,31 @@
+#!/bin/bash
+# h2.startup - Configure Server / Gateway IP and Web Server
+
+# Force DNS resolution (for package installation)
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+# 1. Configure Server IP
+ifconfig eth0 10.0.0.1/24 up
+
+# 2. Update and install Apache and PHP (needed to process submit.php)
+# Apache - Web Server Software
+# PHP - Server-side Scripting Language - Here it processes the POST request from h1 to h2 / h1 to attacker
+apt-get update
+apt-get install -y apache2 php libapache2-mod-php curl
+
+# 3. CRITICAL: Create the simple, intentionally unsecure login page (HTTP POST)
+echo '<html><head><title>Login</title></head><body>' > /var/www/html/login.html
+echo '<h1>Insecure Lab Login</h1>' >> /var/www/html/login.html
+echo '<form method="POST" action="/submit.php">' >> /var/www/html/login.html
+echo 'Username: <input type="text" name="user"><br>' >> /var/www/html/login.html
+echo 'Password: <input type="password" name="pass"><br>' >> /var/www/html/login.html
+echo '<input type="submit" value="Login">' >> /var/www/html/login.html
+echo '</form></body></html>' >> /var/www/html/login.html
+
+# 4. CRITICAL: Create the dummy submission script to handle the POST request
+echo '<?php echo "Login successful (or was it?). Data was sent unencrypted!"; ?>' > /var/www/html/submit.php
+
+# 5. Restart Apache to ensure PHP module is loaded
+service apache2 restart
+
+echo "Server H2 configured. Full Web server running on 10.0.0.1:80."
