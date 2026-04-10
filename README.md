@@ -45,7 +45,24 @@ Credential capture occurs in the brief moment the packet passes through the atta
 ![captured](screenshots/intercepted-login-details.png)
 
 ## Defensive Countermeasures
-DAI, HTTPS/TLS 
+### DAI (Dynamic ARP Inspection) 
+Core Idea : DAI intercepts every ARP reply on untrusted ports and validates it against a trusted database before allowing it through
+
+The database it uses : **DHCP Snooping Binding Table**
+
+When DHCP Snooping is enabled, the switch records every legit IP-to-MAC assignment it sees, so when an attacker tries to send a malicious ARP reply, the packet gets dropped after the switch checks that it is not the legitimate MAC address associated with the IP it is trying to spoof as.
+
+### HTTPS/TLS 
+The problem with HTTP is that it sends everything in plaintext, therefore anyone intercepting traffic can read it. 
+
+**TLS (Transport Layer Security)** solves this by introducing encryption to the data. Even if the traffic is read during transit, the data is scrambled, rendering the attack useless
 
 ## References / What I Learned
-Creating and Capturing Packets using Python scripts
+I learned using Scapy to create and capture packets. That you can even craft the packets in several layers, like manipulating the ARP headers and Ethernet frames. 
+
+I also learned how to use Kathara as a network simulation tool; setting up the topology, connecting each device to the same collision domain to simulate the devices being in the same network
+
+What really surprised me was how easy the attack was, just two short python scripts and I was able to obtain the login credentials of an unsuspecting user. It is clear to me now why most websites nowadays use HTTPS instead of HTTP to block this sort of thing from happening.
+
+
+
